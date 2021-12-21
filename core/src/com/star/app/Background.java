@@ -19,8 +19,8 @@ public class Background {
         }
 
         public void update(float dt) {
-            position.x += (velocity.x - starGame.getHero().getLastMovie().x * 15) * dt;
-            position.y += (velocity.y - starGame.getHero().getLastMovie().y * 15) * dt;
+            position.x += (velocity.x - starGame.getHero().getLastMovie().x * 15 + starGame.getHero().getLastMovieBack().x * 15) * dt;
+            position.y += (velocity.y - starGame.getHero().getLastMovie().y * 15 + starGame.getHero().getLastMovieBack().y * 15) * dt;
             if (position.x < -200) {
                 position.x = ScreenManager.SCREEN_WIDTH + 200;
                 position.y = MathUtils.random(-200, ScreenManager.SCREEN_HEIGHT + 200);
