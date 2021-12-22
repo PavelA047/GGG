@@ -9,6 +9,7 @@ public class MyStarGame extends ApplicationAdapter {
     private SpriteBatch batch;
     private Background background;
     private Hero hero;
+    private Asteroid asteroid;
 
     public Hero getHero() {
         return hero;
@@ -19,6 +20,7 @@ public class MyStarGame extends ApplicationAdapter {
         this.batch = new SpriteBatch();
         this.background = new Background(this);
         this.hero = new Hero();
+        this.asteroid = new Asteroid(this);
     }
 
     @Override
@@ -28,6 +30,7 @@ public class MyStarGame extends ApplicationAdapter {
         ScreenUtils.clear(1, 0, 0, 1);
         batch.begin();
         background.render(batch);
+        asteroid.render(batch);
         hero.render(batch);
         batch.end();
     }
@@ -35,6 +38,7 @@ public class MyStarGame extends ApplicationAdapter {
     public void update(float dt) {
         background.update(dt);
         hero.update(dt);
+        asteroid.update(dt);
     }
 
     @Override
