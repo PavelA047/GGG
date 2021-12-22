@@ -8,12 +8,14 @@ public class Asteroid {
     private Texture texture;
     private Vector2 position;
     private Vector2 velocity;
+    private MyStarGame starGame;
 
-    public Asteroid() {
+    public Asteroid(MyStarGame starGame) {
         this.texture = new Texture("asteroid.png");
         this.position = new Vector2(ScreenManager.SCREEN_WIDTH + 100,
                 ScreenManager.SCREEN_HEIGHT + 100);
         this.velocity = new Vector2(-40, 40);
+        this.starGame = starGame;
     }
 
     public void render(SpriteBatch batch) {
@@ -23,8 +25,8 @@ public class Asteroid {
     }
 
     public void update(float dt) {
-        position.x += velocity.x * dt;
-        position.y += velocity.y * dt;
+        position.x += (velocity.x - starGame.getHero().getLastMovie().x * 15 + starGame.getHero().getLastMovieBack().x * 15) * dt;
+        position.y += (velocity.y - starGame.getHero().getLastMovie().y * 15 + starGame.getHero().getLastMovieBack().y * 15) * dt;
         if (position.x < -100) {
             position.x = ScreenManager.SCREEN_WIDTH + 100;
         }

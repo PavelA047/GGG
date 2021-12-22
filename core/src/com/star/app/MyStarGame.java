@@ -20,7 +20,7 @@ public class MyStarGame extends ApplicationAdapter {
         this.batch = new SpriteBatch();
         this.background = new Background(this);
         this.hero = new Hero();
-        this.asteroid = new Asteroid();
+        this.asteroid = new Asteroid(this);
     }
 
     @Override
