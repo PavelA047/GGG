@@ -3,7 +3,7 @@ package com.star.app.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.star.app.MyStarGame;
-import com.star.app.ScreenManager;
+import com.star.app.screen.ScreenManager;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {

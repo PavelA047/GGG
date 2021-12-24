@@ -1,21 +1,22 @@
-package com.star.app;
+package com.star.app.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.star.app.screen.ScreenManager;
 
 public class Asteroid {
     private Texture texture;
     private Vector2 position;
     private Vector2 velocity;
-    private MyStarGame starGame;
+    private GameController gc;
 
-    public Asteroid(MyStarGame starGame) {
+    public Asteroid(GameController gc) {
         this.texture = new Texture("asteroid.png");
         this.position = new Vector2(ScreenManager.SCREEN_WIDTH + 100,
                 ScreenManager.SCREEN_HEIGHT + 100);
         this.velocity = new Vector2(-40, 40);
-        this.starGame = starGame;
+        this.gc = gc;
     }
 
     public void render(SpriteBatch batch) {
@@ -25,8 +26,8 @@ public class Asteroid {
     }
 
     public void update(float dt) {
-        position.x += (velocity.x - starGame.getHero().getLastMovie().x * 15 + starGame.getHero().getLastMovieBack().x * 15) * dt;
-        position.y += (velocity.y - starGame.getHero().getLastMovie().y * 15 + starGame.getHero().getLastMovieBack().y * 15) * dt;
+        position.x += (velocity.x - gc.getHero().getVelocity().x * 0.1) * dt;
+        position.y += (velocity.y - gc.getHero().getVelocity().y * 0.1) * dt;
         if (position.x < -100) {
             position.x = ScreenManager.SCREEN_WIDTH + 100;
         }
