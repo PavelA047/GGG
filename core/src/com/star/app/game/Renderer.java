@@ -16,7 +16,7 @@ public class Renderer {
         ScreenUtils.clear(1, 0, 0, 1);
         batch.begin();
         gc.getBackground().render(batch);
-        gc.getAsteroid().render(batch);
+        gc.getAsteroidController().render(batch);
         gc.getHero().render(batch);
         gc.getBulletController().render(batch);
         batch.end();
