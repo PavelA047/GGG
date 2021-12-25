@@ -37,7 +37,7 @@ public class Asteroid implements Poolable {
         if (position.x < -100 || position.y > ScreenManager.SCREEN_HEIGHT + 100) {
             deactivate();
             gc.getAsteroidController().setup(MathUtils.random(ScreenManager.SCREEN_WIDTH / 10,
-                    ScreenManager.SCREEN_WIDTH + 100), 0, -40, 40);
+                    ScreenManager.SCREEN_WIDTH + 400), -100, -40, 40);
         }
     }
 
