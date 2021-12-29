@@ -1,5 +1,6 @@
 package com.star.app.game;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.star.app.screen.ScreenManager;
 
 public class GameController {
@@ -13,7 +14,11 @@ public class GameController {
         this.background = new Background(this);
         this.hero = new Hero(this);
         this.bulletController = new BulletController();
-        asteroidController.setup(ScreenManager.SCREEN_WIDTH + 100, -100, -40, 40);
+        for (int i = 0; i < 3; i++) {
+            asteroidController.setup(MathUtils.random(0, ScreenManager.SCREEN_WIDTH),
+                    MathUtils.random(0, ScreenManager.SCREEN_HEIGHT),
+                    MathUtils.random(-200, 200), MathUtils.random(-200, 200), 1.0f);
+        }
     }
 
     public Background getBackground() {
@@ -37,5 +42,22 @@ public class GameController {
         hero.update(dt);
         bulletController.update(dt);
         asteroidController.update(dt);
+        checkCollisions();
+    }
+
+    private void checkCollisions() {
+        for (int i = 0; i < bulletController.getActiveList().size(); i++) {
+            Bullet b = bulletController.getActiveList().get(i);
+            for (int j = 0; j < asteroidController.getActiveList().size(); j++) {
+                Asteroid a = asteroidController.getActiveList().get(j);
+                if (a.getHitArea().contains(b.getPosition())) {
+                    b.deactivate();
+                    if (a.takeDamage(1)) {
+                        hero.addScore(a.getHpMax() * 100);
+                    }
+                    break;
+                }
+            }
+        }
     }
 }
