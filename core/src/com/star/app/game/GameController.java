@@ -8,6 +8,7 @@ public class GameController {
     private Background background;
     private Hero hero;
     private BulletController bulletController;
+    private ParticleController particleController;
     private AsteroidController asteroidController;
     private Vector2 tempVec;
 
@@ -15,8 +16,9 @@ public class GameController {
         this.asteroidController = new AsteroidController(this);
         this.background = new Background(this);
         this.hero = new Hero(this);
-        this.bulletController = new BulletController();
+        this.bulletController = new BulletController(this);
         this.tempVec = new Vector2();
+        this.particleController = new ParticleController();
         for (int i = 0; i < 3; i++) {
             asteroidController.setup(MathUtils.random(0, ScreenManager.SCREEN_WIDTH),
                     MathUtils.random(0, ScreenManager.SCREEN_HEIGHT),
@@ -40,10 +42,15 @@ public class GameController {
         return asteroidController;
     }
 
+    public ParticleController getParticleController() {
+        return particleController;
+    }
+
     public void update(float dt) {
         background.update(dt);
         hero.update(dt);
         bulletController.update(dt);
+        particleController.update(dt);
         asteroidController.update(dt);
         checkCollisions();
     }
@@ -73,6 +80,13 @@ public class GameController {
             for (int j = 0; j < asteroidController.getActiveList().size(); j++) {
                 Asteroid a = asteroidController.getActiveList().get(j);
                 if (a.getHitArea().contains(b.getPosition())) {
+                    particleController.setup(b.getPosition().x + MathUtils.random(-4, 4),
+                            b.getPosition().y + MathUtils.random(-4, 4),
+                            b.getVelocity().x * -0.3f + MathUtils.random(-20, 20),
+                            b.getVelocity().y * -0.3f + MathUtils.random(-20, 20),
+                            0.2f, 2.2f, 1.5f, 1.0f, 1.0f,
+                            1.0f, 1, 0, 0, 1, 0);
+
                     b.deactivate();
                     if (a.takeDamage(1)) {
                         hero.addScore(a.getHpMax() * 100);
