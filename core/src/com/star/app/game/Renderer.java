@@ -25,6 +25,7 @@ public class Renderer {
         gc.getParticleController().render(batch);
         gc.getHero().render(batch);
         gc.getHero().renderGUI(batch, font32);
+        gc.getPowerUpsController().render(batch);
         batch.end();
     }
 }

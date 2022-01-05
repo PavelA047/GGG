@@ -10,6 +10,7 @@ public class GameController {
     private BulletController bulletController;
     private ParticleController particleController;
     private AsteroidController asteroidController;
+    private PowerUpsController powerUpsController;
     private Vector2 tempVec;
 
     public GameController() {
@@ -19,6 +20,7 @@ public class GameController {
         this.bulletController = new BulletController(this);
         this.tempVec = new Vector2();
         this.particleController = new ParticleController();
+        this.powerUpsController = new PowerUpsController();
         for (int i = 0; i < 3; i++) {
             asteroidController.setup(MathUtils.random(0, ScreenManager.SCREEN_WIDTH),
                     MathUtils.random(0, ScreenManager.SCREEN_HEIGHT),
@@ -46,12 +48,17 @@ public class GameController {
         return particleController;
     }
 
+    public PowerUpsController getPowerUpsController() {
+        return powerUpsController;
+    }
+
     public void update(float dt) {
         background.update(dt);
         hero.update(dt);
         bulletController.update(dt);
         particleController.update(dt);
         asteroidController.update(dt);
+        powerUpsController.update();
         checkCollisions();
     }
 
@@ -94,6 +101,18 @@ public class GameController {
                     break;
                 }
             }
+        }
+        if (PowerUps.MEDICINE.getHitArea().overlaps(hero.getHitArea())) {
+            PowerUps.MEDICINE.deactivate();
+            hero.upHp(30);
+        }
+        if (PowerUps.AMMO.getHitArea().overlaps(hero.getHitArea())) {
+            PowerUps.AMMO.deactivate();
+            hero.getCurWeapon().upBullets(50);
+        }
+        if (PowerUps.MONEY.getHitArea().overlaps(hero.getHitArea())) {
+            PowerUps.MONEY.deactivate();
+            hero.upMoney(50);
         }
     }
 }
