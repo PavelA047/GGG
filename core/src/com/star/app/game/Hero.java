@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.star.app.screen.ScreenManager;
 import com.star.app.screen.utils.Assets;
 
@@ -25,6 +26,7 @@ public class Hero {
     private int hp;
     private StringBuilder sb;
     private Circle hitArea;
+    private Weapon curWeapon;
 
     public Circle getHitArea() {
         return hitArea;
@@ -38,6 +40,10 @@ public class Hero {
         return position;
     }
 
+    public float getAngle() {
+        return angle;
+    }
+
     public Hero(GameController gc) {
         this.texture = Assets.getInstance().getAtlas().findRegion("ship");
         this.position = new Vector2(ScreenManager.SCREEN_WIDTH / 2, ScreenManager.SCREEN_HEIGHT / 2);
@@ -49,12 +55,20 @@ public class Hero {
         this.hp = hpMax;
         this.sb = new StringBuilder();
         this.hitArea = new Circle(position, 29);
+        this.curWeapon = new Weapon(gc, this, "Laser", 0.1f,
+                1, 600.0f, 300,
+                new Vector3[]{
+                        new Vector3(28, 0, 0),
+                        new Vector3(28, 90, 20),
+                        new Vector3(28, -90, -20)
+                });
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font) {
         sb.setLength(0);
         sb.append("SCORE: ").append(scoreView).append("\n");
         sb.append("HP: ").append(hp).append("/").append(hpMax).append("\n");
+        sb.append("BULLETS: ").append(curWeapon.getCurBullets()).append("/").append(curWeapon.getMaxBullets()).append("\n");
         font.draw(batch, sb, 20, 700);
     }
 
@@ -78,10 +92,42 @@ public class Hero {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             velocity.x += MathUtils.cosDeg(angle) * enginePower * dt;
             velocity.y += MathUtils.sinDeg(angle) * enginePower * dt;
+
+            float bx = position.x + MathUtils.cosDeg(angle + 180) * 20;
+            float by = position.y + MathUtils.sinDeg(angle + 180) * 20;
+            for (int i = 0; i < 3; i++) {
+                gc.getParticleController().setup(bx + MathUtils.random(-4, 4),
+                        by + MathUtils.random(-4, 4),
+                        velocity.x * -0.3f + MathUtils.random(-20, 20),
+                        velocity.y * -0.3f + MathUtils.random(-20, 20),
+                        0.4f, 1.2f, 0.2f, 1.0f, 0.5f,
+                        0, 1, 1, 1, 1, 0);
+            }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             velocity.x -= MathUtils.cosDeg(angle) * (enginePower / 2) * dt;
             velocity.y -= MathUtils.sinDeg(angle) * (enginePower / 2) * dt;
+
+            float bx = position.x + MathUtils.cosDeg(angle + 90) * 20;
+            float by = position.y + MathUtils.sinDeg(angle + 90) * 20;
+            for (int i = 0; i < 2; i++) {
+                gc.getParticleController().setup(bx + MathUtils.random(-4, 4),
+                        by + MathUtils.random(-4, 4),
+                        velocity.x * -0.1f + MathUtils.random(-20, 20),
+                        velocity.y * -0.1f + MathUtils.random(-20, 20),
+                        0.4f, 1.2f, 0.2f, 1.0f, 0.5f,
+                        0, 1, 1, 1, 1, 0);
+            }
+            bx = position.x + MathUtils.cosDeg(angle - 90) * 20;
+            by = position.y + MathUtils.sinDeg(angle - 90) * 20;
+            for (int i = 0; i < 2; i++) {
+                gc.getParticleController().setup(bx + MathUtils.random(-4, 4),
+                        by + MathUtils.random(-4, 4),
+                        velocity.x * -0.1f + MathUtils.random(-20, 20),
+                        velocity.y * -0.1f + MathUtils.random(-20, 20),
+                        0.4f, 1.2f, 0.2f, 1.0f, 0.5f,
+                        0, 1, 1, 1, 1, 0);
+            }
         }
 
         position.mulAdd(velocity, dt);
@@ -106,19 +152,9 @@ public class Hero {
     }
 
     private void tryToFire() {
-        if (bulletTimeOut > 0.2f) {
+        if (bulletTimeOut > curWeapon.getFirePeriod()) {
             bulletTimeOut = 0.0f;
-            float wx = position.x + MathUtils.cosDeg(angle + 90) * 20;
-            float wy = position.y + MathUtils.sinDeg(angle + 90) * 20;
-            gc.getBulletController().setup(wx, wy,
-                    MathUtils.cosDeg(angle) * 500.0f + velocity.x,
-                    MathUtils.sinDeg(angle) * 500.0f + velocity.y);
-
-            wx = position.x + MathUtils.cosDeg(angle - 90) * 20;
-            wy = position.y + MathUtils.sinDeg(angle - 90) * 20;
-            gc.getBulletController().setup(wx, wy,
-                    MathUtils.cosDeg(angle) * 500.0f + velocity.x,
-                    MathUtils.sinDeg(angle) * 500.0f + velocity.y);
+            curWeapon.fire();
         }
     }
 
