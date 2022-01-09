@@ -30,6 +30,9 @@ public class PowerUpsController extends ObjectPool<PowerUps> {
     }
 
     public void setup(float x, float y) {
-        getActiveElement().activate(x, y);
+        PowerUps activeElement = getActiveElement();
+        if (!activeElement.isActive()) {
+            activeElement.activate(x, y);
+        }
     }
 }
