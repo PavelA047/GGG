@@ -190,6 +190,10 @@ public class Hero {
 
     public void takeDamage(int amount) {
         hp -= amount;
+        if (hp <= 0) {
+            ScreenManager.getInstance().getGameOverScreen().heroIsDead(score, money);
+            ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME_OVER);
+        }
     }
 
     public void consume(PowerUps p) {

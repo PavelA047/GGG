@@ -61,8 +61,6 @@ public class MenuScreen extends AbstractScreen {
         stage.addActor(btnNewGame);
         stage.addActor(btnExitGame);
         skin.dispose();
-
-
     }
 
     public void update(float dt) {
@@ -77,10 +75,5 @@ public class MenuScreen extends AbstractScreen {
         font72.draw(batch, "My Star Game 2022", 0, 600, 1280, Align.center, false);
         batch.end();
         stage.draw();
-    }
-
-    @Override
-    public void dispose() {
-
     }
 }

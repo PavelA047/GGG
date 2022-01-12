@@ -31,44 +31,107 @@ ship
   orig: 64, 64
   offset: 0, 0
   index: -1
-smButton
+stopPressed
   rotate: false
   xy: 326, 2
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+stopMouse
+  rotate: false
+  xy: 368, 2
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+stop
+  rotate: false
+  xy: 410, 2
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+resumePressed
+  rotate: false
+  xy: 452, 2
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+resumeMouse
+  rotate: false
+  xy: 260, 68
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+resume
+  rotate: false
+  xy: 260, 110
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+pausePressed
+  rotate: false
+  xy: 260, 152
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+pauseMouse
+  rotate: false
+  xy: 260, 194
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+pause
+  rotate: false
+  xy: 302, 68
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+smButton
+  rotate: false
+  xy: 344, 68
   size: 120, 32
   orig: 120, 32
   offset: 0, 0
   index: -1
 money
   rotate: false
-  xy: 448, 2
+  xy: 302, 110
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 med
   rotate: false
-  xy: 260, 68
+  xy: 302, 144
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 bullet
   rotate: false
-  xy: 260, 102
+  xy: 302, 178
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ammo
   rotate: false
-  xy: 260, 136
+  xy: 302, 212
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 star16
   rotate: false
-  xy: 326, 36
+  xy: 326, 44
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
