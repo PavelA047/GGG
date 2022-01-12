@@ -62,7 +62,7 @@ public class Weapon {
         }
     }
 
-    public void upBullets(int amount) {
+    public void addAmmos(int amount) {
         curBullets += amount;
         if (curBullets > maxBullets) {
             curBullets = maxBullets;

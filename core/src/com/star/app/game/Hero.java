@@ -192,14 +192,17 @@ public class Hero {
         hp -= amount;
     }
 
-    public void upHp(int amount) {
-        hp += amount;
-        if (hp > hpMax) {
-            hp = hpMax;
+    public void consume(PowerUps p) {
+        switch (p.getType()) {
+            case MEDKIT:
+                hp += p.getPower();
+                if (hp > hpMax) {
+                    hp = hpMax;
+                }
+            case MONEY:
+                money += p.getPower();
+            case AMMOS:
+                curWeapon.addAmmos(p.getPower());
         }
-    }
-
-    public void upMoney(int amount) {
-        money += amount;
     }
 }

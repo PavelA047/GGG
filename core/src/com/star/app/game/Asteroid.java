@@ -58,6 +58,10 @@ public class Asteroid implements Poolable {
         return hitArea;
     }
 
+    public float getScale() {
+        return scale;
+    }
+
     public void update(float dt) {
         position.mulAdd(velocity, dt);
         angle += rotationSpeed * dt;
@@ -97,9 +101,6 @@ public class Asteroid implements Poolable {
         hp -= amount;
         if (hp <= 0) {
             deactivate();
-            if (MathUtils.random() < scale / 4) {
-                gc.getPowerUpsController().setup(position.x, position.y);
-            }
             if (scale > 0.3f) {
                 gc.getAsteroidController().setup(position.x, position.y,
                         MathUtils.random(-150, 150), MathUtils.random(-150, 150), scale - 0.25f);

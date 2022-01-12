@@ -1,38 +1,45 @@
 package com.star.app.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.star.app.game.helpers.ObjectPool;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.star.app.screen.utils.Assets;
 
 public class PowerUpsController extends ObjectPool<PowerUps> {
 
+    private GameController gc;
+    private TextureRegion[][] textures;
+
     @Override
     protected PowerUps newObject() {
-        List<PowerUps> powerUps = new ArrayList<>(Arrays.asList(PowerUps.values()));
-        return powerUps.get(MathUtils.random(0, powerUps.size() - 1));
+        return new PowerUps(gc);
     }
 
-    public void update() {
+    public PowerUpsController(GameController gc) {
+        this.gc = gc;
+        this.textures = new TextureRegion(Assets.getInstance().getAtlas().findRegion("powerups")).split(60,
+                60);
+    }
+
+    public void update(float dt) {
         for (int i = 0; i < activeList.size(); i++) {
-            checkPool();
+            activeList.get(i).update(dt);
         }
+        checkPool();
     }
 
     public void render(SpriteBatch batch) {
         for (int i = 0; i < activeList.size(); i++) {
             PowerUps p = activeList.get(i);
-            p.render(batch);
+            int frameIndex = (int) (p.getTime() / 0.1f) % textures[p.getType().index].length;
+            batch.draw(textures[p.getType().index][frameIndex], p.getPosition().x - 30, p.getPosition().y - 30);
         }
     }
 
-    public void setup(float x, float y) {
-        PowerUps activeElement = getActiveElement();
-        if (!activeElement.isActive()) {
-            activeElement.activate(x, y);
+    public void setup(float x, float y, float probability) {
+        if (MathUtils.random() <= probability) {
+            getActiveElement().activate(PowerUps.Type.values()[MathUtils.random(0, PowerUps.Type.values().length - 1)], x, y, 30);
         }
     }
 }

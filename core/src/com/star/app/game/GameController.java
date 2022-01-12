@@ -20,7 +20,7 @@ public class GameController {
         this.bulletController = new BulletController(this);
         this.tempVec = new Vector2();
         this.particleController = new ParticleController();
-        this.powerUpsController = new PowerUpsController();
+        this.powerUpsController = new PowerUpsController(this);
         for (int i = 0; i < 3; i++) {
             asteroidController.setup(MathUtils.random(0, ScreenManager.SCREEN_WIDTH),
                     MathUtils.random(0, ScreenManager.SCREEN_HEIGHT),
@@ -58,7 +58,7 @@ public class GameController {
         bulletController.update(dt);
         particleController.update(dt);
         asteroidController.update(dt);
-        powerUpsController.update();
+        powerUpsController.update(dt);
         checkCollisions();
     }
 
@@ -95,24 +95,24 @@ public class GameController {
                             1.0f, 1, 0, 0, 1, 0);
 
                     b.deactivate();
-                    if (a.takeDamage(1)) {
+                    if (a.takeDamage(hero.getCurWeapon().getDamage())) {
                         hero.addScore(a.getHpMax() * 100);
+                        for (int k = 0; k < 3; k++) {
+                            powerUpsController.setup(a.getPosition().x, a.getPosition().y,
+                                    a.getScale() * 0.25f);
+                        }
                     }
                     break;
                 }
             }
         }
-        if (PowerUps.MEDICINE.getHitArea().overlaps(hero.getHitArea())) {
-            PowerUps.MEDICINE.deactivate();
-            hero.upHp(30);
-        }
-        if (PowerUps.AMMO.getHitArea().overlaps(hero.getHitArea())) {
-            PowerUps.AMMO.deactivate();
-            hero.getCurWeapon().upBullets(50);
-        }
-        if (PowerUps.MONEY.getHitArea().overlaps(hero.getHitArea())) {
-            PowerUps.MONEY.deactivate();
-            hero.upMoney(50);
+        for (int i = 0; i < powerUpsController.getActiveList().size(); i++) {
+            PowerUps p = powerUpsController.getActiveList().get(i);
+            if (hero.getHitArea().contains(p.getPosition())) {
+                hero.consume(p);
+                particleController.getEffectBuilder().takePowerUpEffect(p.getPosition().x, p.getPosition().y);
+                p.deactivate();
+            }
         }
     }
 }
