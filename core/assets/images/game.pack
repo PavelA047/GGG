@@ -24,114 +24,121 @@ simpleButton
   orig: 320, 80
   offset: 0, 0
   index: -1
-ship
+shortButton
   rotate: false
   xy: 260, 2
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+ship
+  rotate: false
+  xy: 342, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 stopPressed
   rotate: false
-  xy: 326, 2
+  xy: 408, 2
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 stopMouse
   rotate: false
-  xy: 368, 2
+  xy: 450, 2
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 stop
   rotate: false
-  xy: 410, 2
+  xy: 260, 84
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 resumePressed
   rotate: false
-  xy: 452, 2
+  xy: 260, 126
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 resumeMouse
   rotate: false
-  xy: 260, 68
+  xy: 260, 168
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 resume
   rotate: false
-  xy: 260, 110
+  xy: 260, 210
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 pausePressed
   rotate: false
-  xy: 260, 152
+  xy: 302, 84
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 pauseMouse
   rotate: false
-  xy: 260, 194
+  xy: 302, 126
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 302, 68
+  xy: 302, 168
   size: 40, 40
   orig: 40, 40
   offset: 0, 0
   index: -1
 smButton
   rotate: false
-  xy: 344, 68
+  xy: 344, 84
   size: 120, 32
   orig: 120, 32
   offset: 0, 0
   index: -1
 money
   rotate: false
-  xy: 302, 110
+  xy: 408, 44
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 med
   rotate: false
-  xy: 302, 144
+  xy: 450, 44
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 bullet
   rotate: false
-  xy: 302, 178
+  xy: 302, 210
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ammo
   rotate: false
-  xy: 302, 212
+  xy: 466, 84
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 star16
   rotate: false
-  xy: 326, 44
+  xy: 492, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

@@ -2,7 +2,9 @@ package com.star.app.game;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.star.app.screen.ScreenManager;
 import com.star.app.screen.utils.Assets;
 
 public class Renderer {
@@ -26,6 +28,10 @@ public class Renderer {
         gc.getHero().render(batch);
         gc.getHero().renderGUI(batch, font32);
         gc.getPowerUpsController().render(batch);
+        if (gc.isPause()) {
+            font32.draw(batch, "PAUSE", 0, 600, ScreenManager.SCREEN_WIDTH, Align.center, false);
+        }
         batch.end();
+        gc.getStage().draw();
     }
 }
