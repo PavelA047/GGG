@@ -1,7 +1,10 @@
 package com.star.app.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.star.app.screen.ScreenManager;
 
 public class GameController {
@@ -10,15 +13,35 @@ public class GameController {
     private BulletController bulletController;
     private ParticleController particleController;
     private AsteroidController asteroidController;
+    private PowerUpsController powerUpsController;
     private Vector2 tempVec;
+    private Stage stage;
+    private boolean pause;
 
-    public GameController() {
+    public void setPause(boolean pause) {
+        this.pause = pause;
+    }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public GameController(SpriteBatch batch) {
         this.asteroidController = new AsteroidController(this);
         this.background = new Background(this);
         this.hero = new Hero(this);
         this.bulletController = new BulletController(this);
         this.tempVec = new Vector2();
         this.particleController = new ParticleController();
+        this.powerUpsController = new PowerUpsController(this);
+        this.stage = new Stage(ScreenManager.getInstance().getViewport(), batch);
+        stage.addActor(hero.getShop());
+        Gdx.input.setInputProcessor(stage);
+
         for (int i = 0; i < 3; i++) {
             asteroidController.setup(MathUtils.random(0, ScreenManager.SCREEN_WIDTH),
                     MathUtils.random(0, ScreenManager.SCREEN_HEIGHT),
@@ -46,13 +69,25 @@ public class GameController {
         return particleController;
     }
 
+    public PowerUpsController getPowerUpsController() {
+        return powerUpsController;
+    }
+
     public void update(float dt) {
+        if (pause) {
+            return;
+        }
         background.update(dt);
         hero.update(dt);
         bulletController.update(dt);
         particleController.update(dt);
         asteroidController.update(dt);
+        powerUpsController.update(dt);
         checkCollisions();
+        if (!hero.isAlive()) {
+            ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME_OVER, hero);
+        }
+        stage.act(dt);
     }
 
     private void checkCollisions() {
@@ -88,12 +123,28 @@ public class GameController {
                             1.0f, 1, 0, 0, 1, 0);
 
                     b.deactivate();
-                    if (a.takeDamage(1)) {
+                    if (a.takeDamage(hero.getCurWeapon().getDamage())) {
                         hero.addScore(a.getHpMax() * 100);
+                        for (int k = 0; k < 3; k++) {
+                            powerUpsController.setup(a.getPosition().x, a.getPosition().y,
+                                    a.getScale() * 0.25f);
+                        }
                     }
                     break;
                 }
             }
         }
+        for (int i = 0; i < powerUpsController.getActiveList().size(); i++) {
+            PowerUps p = powerUpsController.getActiveList().get(i);
+            if (hero.getHitArea().contains(p.getPosition())) {
+                hero.consume(p);
+                particleController.getEffectBuilder().takePowerUpEffect(p.getPosition().x, p.getPosition().y, p.getType());
+                p.deactivate();
+            }
+        }
+    }
+
+    public void dispose() {
+        background.dispose();
     }
 }

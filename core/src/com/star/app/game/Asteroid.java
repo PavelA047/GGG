@@ -58,6 +58,10 @@ public class Asteroid implements Poolable {
         return hitArea;
     }
 
+    public float getScale() {
+        return scale;
+    }
+
     public void update(float dt) {
         position.mulAdd(velocity, dt);
         angle += rotationSpeed * dt;
