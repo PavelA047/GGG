@@ -93,7 +93,7 @@ public class Hero {
         this.gc = gc;
         this.hpMax = 100;
         this.hp = hpMax;
-        this.money = 15000;
+        this.money = 150;
         this.sb = new StringBuilder();
         this.hitArea = new Circle(position, 29);
         this.magnetArea = new Circle(position, 64);
