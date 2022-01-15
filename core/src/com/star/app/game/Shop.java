@@ -91,8 +91,23 @@ public class Shop extends Group {
                 }
             }
         });
-        buttonWeapon.setPosition(20, 100);
+        buttonWeapon.setPosition(20, 110);
         this.addActor(buttonWeapon);
+
+        final TextButton buttonMagnetArea = new TextButton("Magnet (cost: " + Hero.Skills.MAGNET.cost + ")", textButtonStyle);
+        buttonMagnetArea.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (hero.isMoneyEnough(Hero.Skills.MAGNET.cost)) {
+                    if (hero.upgrade(Hero.Skills.MAGNET)) {
+                        hero.decreaseMoney(Hero.Skills.MAGNET.cost / 2);
+                        buttonMagnetArea.setText("Magnet (cost: " + Hero.Skills.MAGNET.cost + ")");
+                    }
+                }
+            }
+        });
+        buttonMagnetArea.setPosition(20, 10);
+        this.addActor(buttonMagnetArea);
 
         this.setPosition(20, 20);
         this.setVisible(false);

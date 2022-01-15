@@ -15,8 +15,13 @@ public class GameController {
     private AsteroidController asteroidController;
     private PowerUpsController powerUpsController;
     private Vector2 tempVec;
+    private Vector2 vectorHeroPosition;
+    private Vector2 vectorPowerUpsPosition;
     private Stage stage;
     private boolean pause;
+    private boolean nextLevel;
+    private int level;
+    private float nextLevelTime;
 
     public void setPause(boolean pause) {
         this.pause = pause;
@@ -30,23 +35,30 @@ public class GameController {
         return stage;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public boolean isNextLevel() {
+        return nextLevel;
+    }
+
     public GameController(SpriteBatch batch) {
         this.asteroidController = new AsteroidController(this);
         this.background = new Background(this);
         this.hero = new Hero(this);
         this.bulletController = new BulletController(this);
         this.tempVec = new Vector2();
+        this.vectorHeroPosition = new Vector2();
+        this.vectorPowerUpsPosition = new Vector2();
         this.particleController = new ParticleController();
         this.powerUpsController = new PowerUpsController(this);
+        this.level = 1;
+        this.nextLevelTime = 0.0f;
         this.stage = new Stage(ScreenManager.getInstance().getViewport(), batch);
         stage.addActor(hero.getShop());
         Gdx.input.setInputProcessor(stage);
-
-        for (int i = 0; i < 3; i++) {
-            asteroidController.setup(MathUtils.random(0, ScreenManager.SCREEN_WIDTH),
-                    MathUtils.random(0, ScreenManager.SCREEN_HEIGHT),
-                    MathUtils.random(-200, 200), MathUtils.random(-200, 200), 1.0f);
-        }
+        this.nextLevel = true;
     }
 
     public Background getBackground() {
@@ -77,6 +89,10 @@ public class GameController {
         if (pause) {
             return;
         }
+        checkLevel(dt);
+        if (nextLevel) {
+            return;
+        }
         background.update(dt);
         hero.update(dt);
         bulletController.update(dt);
@@ -88,6 +104,27 @@ public class GameController {
             ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME_OVER, hero);
         }
         stage.act(dt);
+    }
+
+    private void checkLevel(float dt) {
+        if (!nextLevel) {
+            if (asteroidController.getActiveList().size() == 0) {
+                nextLevel = true;
+                level++;
+                return;
+            }
+        } else {
+            nextLevelTime += dt;
+            if (nextLevelTime >= 2) {
+                for (int i = 0; i < 3; i++) {
+                    asteroidController.setup(MathUtils.random(0, ScreenManager.SCREEN_WIDTH),
+                            MathUtils.random(0, ScreenManager.SCREEN_HEIGHT),
+                            MathUtils.random(-200, 200), MathUtils.random(-200, 200), 1.0f, level * 10);
+                }
+                nextLevelTime = 0.0f;
+                nextLevel = false;
+            }
+        }
     }
 
     private void checkCollisions() {
@@ -140,6 +177,11 @@ public class GameController {
                 hero.consume(p);
                 particleController.getEffectBuilder().takePowerUpEffect(p.getPosition().x, p.getPosition().y, p.getType());
                 p.deactivate();
+            }
+            if (hero.getMagnetArea().contains(p.getPosition())) {
+                vectorHeroPosition.set(hero.getPosition());
+                vectorPowerUpsPosition.set(p.getPosition());
+                p.getVelocity().mulAdd(vectorHeroPosition.sub(vectorPowerUpsPosition).nor(), 50.0f);
             }
         }
     }
