@@ -31,6 +31,9 @@ public class Renderer {
         if (gc.isPause()) {
             font32.draw(batch, "PAUSE", 0, 600, ScreenManager.SCREEN_WIDTH, Align.center, false);
         }
+        if (gc.isNextLevel()) {
+            font32.draw(batch, "LEVEL: " + gc.getLevel(), 0, 600, ScreenManager.SCREEN_WIDTH, Align.center, false);
+        }
         batch.end();
         gc.getStage().draw();
     }

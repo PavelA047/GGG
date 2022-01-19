@@ -16,7 +16,8 @@ public class Hero {
     public enum Skills {
         HP_MAX(20, 10),
         HP(20, 10),
-        WEAPON(100, 1);
+        WEAPON(100, 1),
+        MAGNET(100, 1);
 
         int cost;
         int power;
@@ -45,6 +46,11 @@ public class Hero {
     private Shop shop;
     private Weapon[] weapons;
     private int weaponNum;
+    private Circle magnetArea;
+
+    public Circle getMagnetArea() {
+        return magnetArea;
+    }
 
     public Shop getShop() {
         return shop;
@@ -90,6 +96,7 @@ public class Hero {
         this.money = 150;
         this.sb = new StringBuilder();
         this.hitArea = new Circle(position, 29);
+        this.magnetArea = new Circle(position, 64);
         this.shop = new Shop(this);
         this.weaponNum = 0;
         createWeapon();
@@ -169,6 +176,7 @@ public class Hero {
 
         position.mulAdd(velocity, dt);
         hitArea.setPosition(position);
+        magnetArea.setPosition(position);
 
         float stopK = 1.0f - 1.0f * dt;
         if (stopK < 0.0f) {
@@ -265,6 +273,11 @@ public class Hero {
                     curWeapon = weapons[weaponNum];
                     return true;
                 }
+                break;
+            case MAGNET:
+                magnetArea.setRadius(magnetArea.radius * 2);
+                Skills.MAGNET.cost *= 2;
+                return true;
         }
         return false;
     }

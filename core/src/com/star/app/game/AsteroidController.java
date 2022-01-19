@@ -29,7 +29,7 @@ public class AsteroidController extends ObjectPool<Asteroid> {
         }
     }
 
-    public void setup(float x, float y, float vx, float vy, float scale) {
-        getActiveElement().activate(x, y, vx, vy, scale);
+    public void setup(float x, float y, float vx, float vy, float scale, float hpScl) {
+        getActiveElement().activate(x, y, vx, vy, scale, hpScl);
     }
 }
