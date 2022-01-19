@@ -1,11 +1,14 @@
 package com.star.app.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.star.app.screen.ScreenManager;
+import com.star.app.screen.utils.Assets;
 
 public class GameController {
     private Background background;
@@ -14,12 +17,19 @@ public class GameController {
     private ParticleController particleController;
     private AsteroidController asteroidController;
     private PowerUpsController powerUpsController;
+    private InfoController infoController;
     private Vector2 tempVec;
     private Stage stage;
     private boolean pause;
     private boolean nextLevel;
     private int level;
     private float nextLevelTime;
+    private Music music;
+    private StringBuilder sb;
+
+    public InfoController getInfoController() {
+        return infoController;
+    }
 
     public void setPause(boolean pause) {
         this.pause = pause;
@@ -42,6 +52,7 @@ public class GameController {
     }
 
     public GameController(SpriteBatch batch) {
+        this.infoController = new InfoController();
         this.asteroidController = new AsteroidController(this);
         this.background = new Background(this);
         this.hero = new Hero(this);
@@ -50,11 +61,15 @@ public class GameController {
         this.particleController = new ParticleController();
         this.powerUpsController = new PowerUpsController(this);
         this.level = 1;
+        this.music = Assets.getInstance().getAssetManager().get("audio/mortal.mp3");
+        this.music.setLooping(true);
+        this.music.play();
         this.nextLevelTime = 0.0f;
         this.stage = new Stage(ScreenManager.getInstance().getViewport(), batch);
         stage.addActor(hero.getShop());
         Gdx.input.setInputProcessor(stage);
         this.nextLevel = true;
+        this.sb = new StringBuilder();
     }
 
     public Background getBackground() {
@@ -95,6 +110,7 @@ public class GameController {
         particleController.update(dt);
         asteroidController.update(dt);
         powerUpsController.update(dt);
+        infoController.update(dt);
         checkCollisions();
         if (!hero.isAlive()) {
             ScreenManager.getInstance().changeScreen(ScreenManager.ScreenType.GAME_OVER, hero);
@@ -141,6 +157,9 @@ public class GameController {
                     hero.addScore(a.getHpMax() * 50);
                 }
                 hero.takeDamage(level * 2);
+                sb.setLength(0);
+                sb.append("HP - ").append(level * 2);
+                infoController.setup(hero.getPosition().x, hero.getPosition().y, sb.toString(), Color.RED);
             }
         }
         for (int i = 0; i < bulletController.getActiveList().size(); i++) {
