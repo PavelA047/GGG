@@ -28,6 +28,7 @@ public class Renderer {
         gc.getHero().render(batch);
         gc.getHero().renderGUI(batch, font32);
         gc.getPowerUpsController().render(batch);
+        gc.getInfoController().render(batch, font32);
         if (gc.isPause()) {
             font32.draw(batch, "PAUSE", 0, 600, ScreenManager.SCREEN_WIDTH, Align.center, false);
         }
