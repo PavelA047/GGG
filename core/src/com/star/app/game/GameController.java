@@ -15,8 +15,6 @@ public class GameController {
     private AsteroidController asteroidController;
     private PowerUpsController powerUpsController;
     private Vector2 tempVec;
-    private Vector2 vectorHeroPosition;
-    private Vector2 vectorPowerUpsPosition;
     private Stage stage;
     private boolean pause;
     private boolean nextLevel;
@@ -49,8 +47,6 @@ public class GameController {
         this.hero = new Hero(this);
         this.bulletController = new BulletController(this);
         this.tempVec = new Vector2();
-        this.vectorHeroPosition = new Vector2();
-        this.vectorPowerUpsPosition = new Vector2();
         this.particleController = new ParticleController();
         this.powerUpsController = new PowerUpsController(this);
         this.level = 1;
@@ -144,7 +140,7 @@ public class GameController {
                 if (a.takeDamage(2)) {
                     hero.addScore(a.getHpMax() * 50);
                 }
-                hero.takeDamage(2);
+                hero.takeDamage(level * 2);
             }
         }
         for (int i = 0; i < bulletController.getActiveList().size(); i++) {
@@ -179,9 +175,8 @@ public class GameController {
                 p.deactivate();
             }
             if (hero.getMagnetArea().contains(p.getPosition())) {
-                vectorHeroPosition.set(hero.getPosition());
-                vectorPowerUpsPosition.set(p.getPosition());
-                p.getVelocity().mulAdd(vectorHeroPosition.sub(vectorPowerUpsPosition).nor(), 50.0f);
+                tempVec.set(hero.getPosition()).sub(p.getPosition()).nor();
+                p.getVelocity().mulAdd(tempVec, 50.0f);
             }
         }
     }
