@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.star.app.screen.ScreenManager;
-import com.star.app.screen.utils.Assets;
 
 public class Ship {
     protected Vector2 position;
@@ -22,6 +21,10 @@ public class Ship {
     protected int weaponNum;
     protected TextureRegion texture;
     protected GameController gc;
+
+    public int getHpMax() {
+        return hpMax;
+    }
 
     public Weapon getCurWeapon() {
         return curWeapon;
@@ -118,17 +121,11 @@ public class Ship {
             stopK = 0.0f;
         }
         velocity.scl(stopK);
-
-        checkSpaceBorders();
     }
 
-    private void checkSpaceBorders() {
+    protected void checkSpaceBorders() {
         if (position.x < 32) {
             position.x = 32;
-            velocity.x *= -0.5f;
-        }
-        if (position.x > ScreenManager.SCREEN_WIDTH - 32) {
-            position.x = ScreenManager.SCREEN_WIDTH - 32;
             velocity.x *= -0.5f;
         }
         if (position.y < 32) {
@@ -141,10 +138,10 @@ public class Ship {
         }
     }
 
-    public void tryToFire() {
+    public void tryToFire(BulletController bulletController) {
         if (bulletTimeOut > curWeapon.getFirePeriod()) {
             bulletTimeOut = 0.0f;
-            curWeapon.fire();
+            curWeapon.fire(bulletController);
         }
     }
 }

@@ -22,13 +22,15 @@ public class Renderer {
         ScreenUtils.clear(1, 0, 0, 1);
         batch.begin();
         gc.getBackground().render(batch);
-        gc.getBulletController().render(batch);
+        gc.getBulletControllerHero().render(batch);
+        gc.getBulletControllerBot().render(batch);
         gc.getAsteroidController().render(batch);
         gc.getParticleController().render(batch);
         gc.getHero().render(batch);
         gc.getHero().renderGUI(batch, font32);
         gc.getPowerUpsController().render(batch);
         gc.getInfoController().render(batch, font32);
+        gc.getBotController().render(batch);
         if (gc.isPause()) {
             font32.draw(batch, "PAUSE", 0, 600, ScreenManager.SCREEN_WIDTH, Align.center, false);
         }

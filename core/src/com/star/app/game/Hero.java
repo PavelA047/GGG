@@ -75,7 +75,7 @@ public class Hero extends Ship {
         super.update(dt);
         updateScore(dt);
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            tryToFire();
+            tryToFire(gc.getBulletControllerHero());
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             angle += 180.0f * dt;
@@ -129,7 +129,15 @@ public class Hero extends Ship {
         }
 
         magnetArea.setPosition(position);
+        checkSpaceBorders();
+    }
 
+    protected void checkSpaceBorders() {
+        super.checkSpaceBorders();
+        if (position.x > ScreenManager.SCREEN_WIDTH - 32) {
+            position.x = ScreenManager.SCREEN_WIDTH - 32;
+            velocity.x *= -0.5f;
+        }
     }
 
     private void updateScore(float dt) {
