@@ -60,6 +60,7 @@ public class Hero extends Ship {
         this.shop = new Shop(this);
         this.texture = Assets.getInstance().getAtlas().findRegion("ship");
         this.hitArea = new Circle(position, 29);
+        this.ownerType = OwnerType.PLAYER;
     }
 
     public void renderGUI(SpriteBatch batch, BitmapFont font) {
@@ -84,8 +85,7 @@ public class Hero extends Ship {
             angle -= 180.0f * dt;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            velocity.x += MathUtils.cosDeg(angle) * enginePower * dt;
-            velocity.y += MathUtils.sinDeg(angle) * enginePower * dt;
+            accelerate(dt);
 
             float bx = position.x + MathUtils.cosDeg(angle + 180) * 20;
             float by = position.y + MathUtils.sinDeg(angle + 180) * 20;
@@ -99,8 +99,7 @@ public class Hero extends Ship {
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            velocity.x -= MathUtils.cosDeg(angle) * (enginePower / 2) * dt;
-            velocity.y -= MathUtils.sinDeg(angle) * (enginePower / 2) * dt;
+            brake(dt);
 
             float bx = position.x + MathUtils.cosDeg(angle + 90) * 20;
             float by = position.y + MathUtils.sinDeg(angle + 90) * 20;

@@ -48,6 +48,38 @@ public class ParticleController extends ObjectPool<Particle> {
                     break;
             }
         }
+
+        public void bulletCollideWithAsteroid(Bullet b) {
+            setup(b.getPosition().x + MathUtils.random(-4, 4),
+                    b.getPosition().y + MathUtils.random(-4, 4),
+                    b.getVelocity().x * -0.3f + MathUtils.random(-20, 20),
+                    b.getVelocity().y * -0.3f + MathUtils.random(-20, 20),
+                    0.2f, 2.2f, 1.5f, 1.0f, 1.0f,
+                    1.0f, 1, 0, 0, 1, 0);
+        }
+
+        public void createBulletTrace(OwnerType ownerType, Bullet bullet) {
+            switch (ownerType) {
+                case PLAYER:
+                    for (int i = 0; i < 2; i++) {
+                        setup(bullet.getPosition().x + MathUtils.random(-4, 4),
+                                bullet.getPosition().y + MathUtils.random(-4, 4),
+                                bullet.getVelocity().x * -0.1f + MathUtils.random(-20, 20),
+                                bullet.getVelocity().y * -0.1f + MathUtils.random(-20, 20),
+                                0.1f, 1.2f, 0.2f, 1.0f, 0.7f,
+                                0, 1, 1, 1, 1, 0);
+                    }
+                    break;
+                case BOT:
+                    setup(bullet.getPosition().x + MathUtils.random(-4, 4),
+                            bullet.getPosition().y + MathUtils.random(-4, 4),
+                            bullet.getVelocity().x * -0.1f + MathUtils.random(-20, 20),
+                            bullet.getVelocity().y * -0.1f + MathUtils.random(-20, 20),
+                            0.13f, 2.2f, 1.5f, 0.0f, 0.9f,
+                            0, 1, 0, 0.8f, 0.1f, 0);
+                    break;
+            }
+        }
     }
 
     private TextureRegion oneParticle;
