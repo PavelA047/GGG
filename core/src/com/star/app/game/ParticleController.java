@@ -49,7 +49,7 @@ public class ParticleController extends ObjectPool<Particle> {
             }
         }
 
-        public void bulletCollideWithAsteroid(Bullet b) {
+        public void bulletCollideWithSubject(Bullet b) {
             setup(b.getPosition().x + MathUtils.random(-4, 4),
                     b.getPosition().y + MathUtils.random(-4, 4),
                     b.getVelocity().x * -0.3f + MathUtils.random(-20, 20),

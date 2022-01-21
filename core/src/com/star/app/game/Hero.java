@@ -72,6 +72,14 @@ public class Hero extends Ship {
         font.draw(batch, sb, 20, 700);
     }
 
+    protected void checkSpaceBorders() {
+        super.checkSpaceBorders();
+        if (position.x > ScreenManager.SCREEN_WIDTH - 32) {
+            position.x = ScreenManager.SCREEN_WIDTH - 32;
+            velocity.x *= -0.5f;
+        }
+    }
+
     public void update(float dt) {
         super.update(dt);
         updateScore(dt);
