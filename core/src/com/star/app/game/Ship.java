@@ -127,13 +127,9 @@ public class Ship {
         checkSpaceBorders();
     }
 
-    private void checkSpaceBorders() {
+    protected void checkSpaceBorders() {
         if (position.x < 32) {
             position.x = 32;
-            velocity.x *= -0.5f;
-        }
-        if (position.x > ScreenManager.SCREEN_WIDTH - 32) {
-            position.x = ScreenManager.SCREEN_WIDTH - 32;
             velocity.x *= -0.5f;
         }
         if (position.y < 32) {

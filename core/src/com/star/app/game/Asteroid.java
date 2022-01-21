@@ -1,5 +1,6 @@
 package com.star.app.game;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
@@ -23,6 +24,7 @@ public class Asteroid implements Poolable {
     private final float BASE_SIZE = 256;
     private final float BASE_RADIUS = BASE_SIZE / 2;
     private GameController gc;
+    private Sound exPiecesSound;
 
     public Asteroid(GameController gc) {
         this.texture = Assets.getInstance().getAtlas().findRegion("asteroid");
@@ -31,6 +33,7 @@ public class Asteroid implements Poolable {
         this.active = false;
         this.hitArea = new Circle(0, 0, 0);
         this.gc = gc;
+        this.exPiecesSound = Assets.getInstance().getAssetManager().get("audio/ExplosionWithPieces.mp3");
     }
 
     @Override
@@ -101,6 +104,7 @@ public class Asteroid implements Poolable {
         hp -= amount;
         if (hp <= 0) {
             deactivate();
+            exPiecesSound.play();
             if (scale > 0.3f) {
                 gc.getAsteroidController().setup(position.x, position.y,
                         MathUtils.random(-150, 150), MathUtils.random(-150, 150), scale - 0.25f, gc.getLevel() * 10);

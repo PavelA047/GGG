@@ -2,6 +2,7 @@ package com.star.app.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.star.app.screen.ScreenManager;
 import com.star.app.screen.utils.Assets;
+
 
 public class GameController {
     private Background background;
@@ -76,9 +78,6 @@ public class GameController {
         Gdx.input.setInputProcessor(stage);
         this.nextLevel = true;
         this.sb = new StringBuilder();
-
-        botController.setup(100, 100);
-        botController.setup(600, 100);
     }
 
     public Background getBackground() {
@@ -103,6 +102,10 @@ public class GameController {
 
     public PowerUpsController getPowerUpsController() {
         return powerUpsController;
+    }
+
+    public StringBuilder getSb() {
+        return sb;
     }
 
     public void update(float dt) {
@@ -142,6 +145,10 @@ public class GameController {
                     asteroidController.setup(MathUtils.random(0, ScreenManager.SCREEN_WIDTH),
                             MathUtils.random(0, ScreenManager.SCREEN_HEIGHT),
                             MathUtils.random(-200, 200), MathUtils.random(-200, 200), 1.0f, level * 10);
+                }
+                for (int i = 0; i < 2; i++) {
+                    botController.setup(ScreenManager.SCREEN_WIDTH + 32, MathUtils
+                            .random(0, ScreenManager.SCREEN_HEIGHT));
                 }
                 nextLevelTime = 0.0f;
                 nextLevel = false;
@@ -195,7 +202,7 @@ public class GameController {
                 Asteroid a = asteroidController.getActiveList().get(j);
                 if (a.getHitArea().contains(b.getPosition())) {
 
-                    particleController.getEffectBuilder().bulletCollideWithAsteroid(b);
+                    particleController.getEffectBuilder().bulletCollideWithSubject(b);
 
                     b.deactivate();
                     if (a.takeDamage(b.getOwner().getCurWeapon().getDamage())) {
@@ -228,7 +235,11 @@ public class GameController {
             if (b.getOwner().getOwnerType() == OwnerType.BOT) {
                 if (hero.getHitArea().contains(b.getPosition())) {
                     hero.takeDamage(b.getOwner().getCurWeapon().getDamage());
+                    sb.setLength(0);
+                    sb.append("HP - ").append(b.getOwner().getCurWeapon().getDamage());
+                    infoController.setup(hero.getPosition().x, hero.getPosition().y, sb.toString(), Color.RED);
                     b.deactivate();
+                    particleController.getEffectBuilder().bulletCollideWithSubject(b);
                 }
             }
             if (b.getOwner().getOwnerType() == OwnerType.PLAYER) {
@@ -237,6 +248,45 @@ public class GameController {
                     if (bot.getHitArea().contains(b.getPosition())) {
                         bot.takeDamage(b.getOwner().getCurWeapon().getDamage());
                         b.deactivate();
+                        particleController.getEffectBuilder().bulletCollideWithSubject(b);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < botController.getActiveList().size(); i++) {
+            Bot bot1 = botController.getActiveList().get(i);
+            if (bot1.getHitArea().overlaps(hero.getHitArea())) {
+                float dst = bot1.getPosition().dst(hero.getPosition());
+                float halfOverLen = (bot1.getHitArea().radius + hero.getHitArea().radius - dst) / 2;
+                tempVec.set(hero.getPosition()).sub(bot1.getPosition()).nor();
+                hero.getPosition().mulAdd(tempVec, halfOverLen);
+                bot1.getPosition().mulAdd(tempVec, -halfOverLen);
+
+                float sumScl = hero.getHitArea().radius + bot1.getHitArea().radius;
+                hero.getVelocity().mulAdd(tempVec, bot1.getHitArea().radius / sumScl * 30);
+                bot1.getVelocity().mulAdd(tempVec, -hero.getHitArea().radius / sumScl * 30);
+
+                bot1.takeDamage(1);
+                hero.takeDamage(1);
+                sb.setLength(0);
+                sb.append("HP - 1");
+                infoController.setup(hero.getPosition().x, hero.getPosition().y, sb.toString(), Color.RED);
+            }
+            for (int j = 0; j < botController.getActiveList().size(); j++) {
+                Bot bot2 = botController.getActiveList().get(j);
+                if (bot1 == bot2) {
+                    continue;
+                } else {
+                    if (bot1.getHitArea().overlaps(bot2.getHitArea())) {
+                        float dst = bot1.getPosition().dst(bot2.getPosition());
+                        float halfOverLen = (bot1.getHitArea().radius + bot2.getHitArea().radius - dst) / 2;
+                        tempVec.set(bot2.getPosition()).sub(bot1.getPosition()).nor();
+                        bot2.getPosition().mulAdd(tempVec, halfOverLen);
+                        bot1.getPosition().mulAdd(tempVec, -halfOverLen);
+
+                        float sumScl = bot2.getHitArea().radius + bot1.getHitArea().radius;
+                        bot2.getVelocity().mulAdd(tempVec, bot1.getHitArea().radius / sumScl * 30);
+                        bot1.getVelocity().mulAdd(tempVec, -bot2.getHitArea().radius / sumScl * 30);
                     }
                 }
             }

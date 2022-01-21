@@ -1,5 +1,7 @@
 package com.star.app.game;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -10,6 +12,7 @@ public class Bot extends Ship implements Poolable {
 
     private boolean active;
     private Vector2 tempVector;
+    private Sound exSound;
 
     @Override
     public boolean isActive() {
@@ -17,7 +20,7 @@ public class Bot extends Ship implements Poolable {
     }
 
     public Bot(GameController gc) {
-        super(gc, 20, 150);
+        super(gc, 50, 150);
         this.position = new Vector2(0, 0);
         this.velocity = new Vector2(0, 0);
         this.tempVector = new Vector2(0, 0);
@@ -25,6 +28,7 @@ public class Bot extends Ship implements Poolable {
         this.hitArea = new Circle(position, 29);
         this.active = false;
         this.ownerType = OwnerType.BOT;
+        this.exSound = Assets.getInstance().getAssetManager().get("audio/Explosion.mp3");
     }
 
     public void update(float dt) {
@@ -32,6 +36,11 @@ public class Bot extends Ship implements Poolable {
 
         if (!isAlive()) {
             deactivate();
+            exSound.play();
+            gc.getHero().addScore(gc.getLevel() * 10);
+            gc.getSb().setLength(0);
+            gc.getSb().append("SCORE + ").append(gc.getLevel() * 10);
+            gc.getInfoController().setup(this.getPosition().x, this.getPosition().y, gc.getSb().toString(), Color.WHITE);
         }
         tempVector.set(gc.getHero().getPosition()).sub(position).nor();
 
@@ -51,7 +60,7 @@ public class Bot extends Ship implements Poolable {
                         0, 1, 1, 0.5f, 0, 0);
             }
         }
-        if (gc.getHero().getPosition().dst(position) <300) {
+        if (gc.getHero().getPosition().dst(position) < 300) {
             tryToFire();
         }
     }
