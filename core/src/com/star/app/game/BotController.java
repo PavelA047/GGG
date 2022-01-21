@@ -22,8 +22,8 @@ public class BotController extends ObjectPool<Bot> {
         }
     }
 
-    public void setup(float x, float y) {
-        getActiveElement().activate(x, y);
+    public void setup(float x, float y, int scl) {
+        getActiveElement().activate(x, y, scl);
     }
 
     public void update(float dt) {

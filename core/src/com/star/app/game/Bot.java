@@ -20,7 +20,7 @@ public class Bot extends Ship implements Poolable {
     }
 
     public Bot(GameController gc) {
-        super(gc, 50, 150);
+        super(gc, 10, 150);
         this.position = new Vector2(0, 0);
         this.velocity = new Vector2(0, 0);
         this.tempVector = new Vector2(0, 0);
@@ -65,7 +65,9 @@ public class Bot extends Ship implements Poolable {
         }
     }
 
-    public void activate(float x, float y) {
+    public void activate(float x, float y, int scl) {
+        hpMax *= scl;
+        hp = hpMax;
         position.set(x, y);
         active = true;
     }

@@ -148,7 +148,7 @@ public class GameController {
                 }
                 for (int i = 0; i < 2; i++) {
                     botController.setup(ScreenManager.SCREEN_WIDTH + 32, MathUtils
-                            .random(0, ScreenManager.SCREEN_HEIGHT));
+                            .random(0, ScreenManager.SCREEN_HEIGHT), level);
                 }
                 nextLevelTime = 0.0f;
                 nextLevel = false;
